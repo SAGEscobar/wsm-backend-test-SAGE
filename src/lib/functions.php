@@ -4,6 +4,9 @@
   function getAll(&$connection){
     $accountsData = $connection->selectDatabase('demo-db')->Accounts->aggregate([
       ['$match'=> ["status"=> 'ACTIVE']],
+      ['$addFields'=> [
+        'temp'=>[[ 'clicks'=> 0, 'spend'=> 0, 'impressions'=> 0, 'costPerClick'=>0]]
+      ]],
       ['$lookup'=> [  // Join Metrics collection to the query by matching the accountId
          'from'=> "Metrics",
          'let'=> [ 'acct'=> '$accountId' ],
@@ -25,8 +28,20 @@
                   'costPerClick'=> ['$sum'=> '$costPerClick'],
                  ]]
              ],
-         'as'=> "Metrics",
+         'as'=> "mrt",
        ]],
+       ['$project'=> [
+        'accountName'=> '$accountName',
+        'accountId'=> '$accountId',
+        'temp'=>'$temp',
+        'temp2'=> ['$arrayElemAt'=> [ '$mrt', -1 ] ],
+       ]],
+       ['$project'=> [
+        'accountName'=> '$accountName',
+        'accountId'=> '$accountId',
+        'Metrics'=> ['$ifNull'=> ['$temp2', ['$arrayElemAt'=> [ '$temp', -1 ] ]] ],
+       ]],
+      
        
     ]);
     return $accountsData;
@@ -35,6 +50,9 @@
   function getAccountsMetrics(&$connection, $account){
     $accountData = $connection->selectDatabase('demo-db')->Accounts->aggregate([
       ['$match'=> ["accountId"=> $account]],
+      ['$addFields'=> [
+        'temp'=>[[ 'clicks'=> 0, 'spend'=> 0, 'impressions'=> 0, 'costPerClick'=>0]]
+      ]],
       ['$lookup'=> [
          'from'=> "Metrics",
          'pipeline'=> [
@@ -56,8 +74,19 @@
                               'costPerClick'=> ['$sum'=> '$costPerClick'],
                              ]]
              ],
-         'as'=> "Metrics"
-       ]]
+         'as'=> "mrm"
+       ]],
+       ['$project'=> [
+        'accountName'=> '$accountName',
+        'accountId'=> '$accountId',
+        'temp'=>'$temp',
+        'temp2'=> ['$arrayElemAt'=> [ '$mrt', -1 ] ],
+       ]],
+       ['$project'=> [
+        'accountName'=> '$accountName',
+        'accountId'=> '$accountId',
+        'Metrics'=> ['$ifNull'=> ['$temp2', ['$arrayElemAt'=> [ '$temp', -1 ] ]] ],
+       ]],
       ]);
 
 

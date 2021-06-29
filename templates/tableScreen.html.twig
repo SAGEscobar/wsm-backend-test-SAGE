@@ -51,16 +51,14 @@
             {# whit this double loop is created a row in the table for each metric attached to the accountId #}
             {% for data in collection %}
 
-            {% for metric in data.Metrics %}
             <tr>
                 <td style="text-align: center;">{{data.accountName}}</td>
                 <td style="text-align: center;">{{data.accountId}}</td>
-                <td style="text-align: center;">{{metric.spend}}</td>
-                <td style="text-align: center;">{{metric.clicks}}</td>
-                <td style="text-align: center;">{{metric.impressions}}</td>
-                <td style="text-align: center;">{{metric.costPerClick}}</td>
+                <td style="text-align: center;">{{data.Metrics.spend}}</td>
+                <td style="text-align: center;">{{data.Metrics.clicks}}</td>
+                <td style="text-align: center;">{{data.Metrics.impressions}}</td>
+                <td style="text-align: center;">{{data.Metrics.costPerClick}}</td>
             </tr>
-            {% endfor %}
 
             {% endfor %}
             {% endif %}
