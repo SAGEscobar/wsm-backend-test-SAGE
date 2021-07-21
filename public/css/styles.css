@@ -1,0 +1,78 @@
+body {
+  font-family: 'Lato', sans-serif;
+}
+
+.form_container {
+  margin: 15px;
+}
+
+.lbl_text {
+  display: block;
+  font-weight: 200;
+  font-size: 14px;
+}
+
+.inp_text {
+  background-color: #fff;
+  border: none;
+  border-bottom: solid 1px #333;
+  font-size: 18px;
+  padding: 5px 10px;
+}
+
+.button {
+  border: none;
+  border-radius: 3px;
+  background-color: #26a69a;
+  padding: 5px 15px;
+  box-shadow: 0.5px 0.5px 3px #000;
+  margin-right: 10px;
+  font-weight: 400;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.text {
+  font-weight: 400;
+  margin: 10px 0 2px 5px;
+}
+.text span {
+  font-weight: 600;
+}
+
+#filter {
+  border: none;
+  background-color: rgba(0, 150, 100, 0.5);
+  border-radius: 5px;
+  padding: 2px 2px;
+  font-weight: 500;
+}
+
+table {
+  width: 100%;
+  margin: 0 auto;
+  border-top: solid 1px #444;
+}
+
+td {
+  text-align: center;
+}
+
+.inactive td {
+  background-color: rgba(230, 0, 0, 0.5);
+}
+
+.no_account_data {
+  width: 100%;
+  position: absolute;
+}
+
+.no_account_data td {
+  color: red;
+  font-size: 2.3em;
+  text-align: center;
+  width: 100%;
+  position: relative;
+  right: -8em;
+  top: 2em;
+}

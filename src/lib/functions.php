@@ -1,9 +1,23 @@
 <?php
 
 
-  function getAll(&$connection){
+  function getAll(&$connection, $filter){
+    $regex = '';
+    switch ($filter){
+      case '0':
+        $regex = 'ACTIVE';
+        break;
+      case '1':
+        $regex = '^ACTIVE$';
+        break;
+      case '2':
+        $regex = '^INACTIVE$';
+        break;
+      default:
+        $regex = 'ACTIVE';
+    }
     $accountsData = $connection->selectDatabase('demo-db')->Accounts->aggregate([
-      ['$match'=> ["status"=> 'ACTIVE']],
+      ['$match'=> ["status"=> ['$regex'=> $regex, '$options'=> 'm']]],
       ['$addFields'=> [
         'temp'=>[[ 'clicks'=> 0, 'spend'=> 0, 'impressions'=> 0, 'costPerClick'=>0]]
       ]],
@@ -33,11 +47,13 @@
        ['$project'=> [
         'accountName'=> '$accountName',
         'accountId'=> '$accountId',
+        'status'=>'$status',
         'temp'=>'$temp',
         'temp2'=> ['$arrayElemAt'=> [ '$mrt', -1 ] ],
        ]],
        ['$project'=> [
         'accountName'=> '$accountName',
+        'status'=>'$status',
         'accountId'=> '$accountId',
         'Metrics'=> ['$ifNull'=> ['$temp2', ['$arrayElemAt'=> [ '$temp', -1 ] ]] ],
        ]],
@@ -74,17 +90,19 @@
                               'costPerClick'=> ['$sum'=> '$costPerClick'],
                              ]]
              ],
-         'as'=> "mrm"
+         'as'=> "mrt"
        ]],
        ['$project'=> [
         'accountName'=> '$accountName',
         'accountId'=> '$accountId',
+        'status'=>'$status',
         'temp'=>'$temp',
         'temp2'=> ['$arrayElemAt'=> [ '$mrt', -1 ] ],
        ]],
        ['$project'=> [
         'accountName'=> '$accountName',
         'accountId'=> '$accountId',
+        'status'=>'$status',
         'Metrics'=> ['$ifNull'=> ['$temp2', ['$arrayElemAt'=> [ '$temp', -1 ] ]] ],
        ]],
       ]);
